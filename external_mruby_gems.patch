@@ -1,0 +1,17 @@
+diff -dur zynaddsubfx-3.0.3.orig/mruby-zest-build/build_config.rb zynaddsubfx-3.0.3/mruby-zest-build/build_config.rb
+--- zynaddsubfx-3.0.3.orig/mruby-zest-build/build_config.rb	2018-08-09 10:57:14.000000000 +0200
++++ zynaddsubfx-3.0.3/mruby-zest-build/build_config.rb	2018-08-09 10:58:48.000000000 +0200
+@@ -75,6 +75,13 @@
+   #Eval for runtime reloads
+   conf.gem :core => "mruby-eval"
+ 
++  #external gems
++  conf.gem 'deps/mruby-pack'
++  conf.gem 'deps/mruby-process'
++  conf.gem 'deps/mruby-file-stat'
++  conf.gem 'deps/mruby-errno'
++  conf.gem 'deps/mruby-dir'
++
+   #Non-STD lib gems
+   conf.gem 'deps/mruby-io'
+   conf.gem 'deps/mruby-nanovg'
