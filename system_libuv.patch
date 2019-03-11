@@ -1,6 +1,6 @@
-diff -dur -x '*~' -x '*.orig' -x '*.rej' zynaddsubfx-3.0.4.orig/mruby-zest-build/build_config.rb zynaddsubfx-3.0.4/mruby-zest-build/build_config.rb
+diff -dur zynaddsubfx-3.0.4.orig/mruby-zest-build/build_config.rb zynaddsubfx-3.0.4/mruby-zest-build/build_config.rb
 --- zynaddsubfx-3.0.4.orig/mruby-zest-build/build_config.rb	2019-03-10 17:25:51.000000000 +0100
-+++ zynaddsubfx-3.0.4/mruby-zest-build/build_config.rb	2019-03-11 08:46:58.000000000 +0100
++++ zynaddsubfx-3.0.4/mruby-zest-build/build_config.rb	2019-03-11 09:47:28.000000000 +0100
 @@ -92,7 +92,6 @@
    conf.cc do |cc|
        cc.include_paths << "#{`pwd`.strip}/../deps/nanovg/src"
@@ -18,9 +18,9 @@ diff -dur -x '*~' -x '*.orig' -x '*.rej' zynaddsubfx-3.0.4.orig/mruby-zest-build
          if(ENV['OS'] != "Mac")
            linker.libraries << 'GL'
            linker.libraries << 'X11'
-diff -dur -x '*~' -x '*.orig' -x '*.rej' zynaddsubfx-3.0.4.orig/mruby-zest-build/Makefile zynaddsubfx-3.0.4/mruby-zest-build/Makefile
+diff -dur zynaddsubfx-3.0.4.orig/mruby-zest-build/Makefile zynaddsubfx-3.0.4/mruby-zest-build/Makefile
 --- zynaddsubfx-3.0.4.orig/mruby-zest-build/Makefile	2019-03-10 17:25:51.000000000 +0100
-+++ zynaddsubfx-3.0.4/mruby-zest-build/Makefile	2019-03-11 08:48:11.000000000 +0100
++++ zynaddsubfx-3.0.4/mruby-zest-build/Makefile	2019-03-11 09:48:19.000000000 +0100
 @@ -15,7 +15,7 @@
  	$(CC) -shared -o libzest.so `find mruby/build/host -type f | grep -e "\.o$$" | grep -v bin` ./deps/libnanovg.a \
  		./deps/libnanovg.a \
@@ -54,3 +54,12 @@ diff -dur -x '*~' -x '*.orig' -x '*.rej' zynaddsubfx-3.0.4.orig/mruby-zest-build
  deps/libuv.a:
  	cd deps/$(UV_DIR)    && ./autogen.sh
  	cd deps/$(UV_DIR)    && CFLAGS=-fPIC ./configure
+@@ -64,7 +64,7 @@
+ 
+ deps/$(UV_DIR):
+ 	cd deps              && wget -4 $(UV_URL) && tar xvf $(UV_FILE)
+-setup: deps/$(UV_DIR)
++setup:
+ 
+ setupwin:
+ 	cd deps              && wget -4 $(UV_URL)
