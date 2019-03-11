@@ -5,7 +5,7 @@
 #
 # Use the provided 'get-fusion.sh' script to generate the Source1 archive
 
-%define fusion_version 3.0.2_59_gc4c9221
+%define fusion_version 3.0.4
 
 %define mruby_pack_version 383a9c79e191d524a9a2b4107cc5043ecbf6190b
 %define mruby_process_version bd288a930d4f61fbda1865deb8997245dc5fd38c
@@ -16,14 +16,14 @@
 Summary:	Realtime software synthesizer
 Summary(pl.UTF-8):	Syntezator programowy działający w czasie rzeczywistym
 Name:		zynaddsubfx-fusion
-Version:	3.0.3
+Version:	3.0.4
 Release:	1
 License:	GPL
 Group:		X11/Applications/Sound
 Source0:	http://downloads.sourceforge.net/zynaddsubfx/zynaddsubfx-%{version}.tar.bz2
-# Source0-md5:	66acae0913108f129aa979f3c4b65473
+# Source0-md5:	090331a1c26f89aa52bd7e35f40ce6b6
 Source1:	mruby-zest-build-%{fusion_version}.tar.xz
-# Source1-md5:	fa7c3b4c46e6155df19cb00d9dc6db0f
+# Source1-md5:	668655c079deecdb9d3a77d961ec7661
 Source2:	https://github.com/iij/mruby-pack/archive/%{mruby_pack_version}/mruby-pack-%{mruby_pack_version}.tar.gz
 # Source2-md5:	b77f2dea16857e64624730ec94beb778
 Source3:	https://github.com/iij/mruby-process/archive/%{mruby_process_version}/mruby-process-%{mruby_process_version}.tar.gz

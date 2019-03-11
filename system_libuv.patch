@@ -1,6 +1,6 @@
-diff -dur zynaddsubfx-3.0.3.orig/mruby-zest-build/build_config.rb zynaddsubfx-3.0.3/mruby-zest-build/build_config.rb
---- zynaddsubfx-3.0.3.orig/mruby-zest-build/build_config.rb	2018-08-06 09:01:21.000000000 +0200
-+++ zynaddsubfx-3.0.3/mruby-zest-build/build_config.rb	2018-08-07 14:32:40.000000000 +0200
+diff -dur -x '*~' -x '*.orig' -x '*.rej' zynaddsubfx-3.0.4.orig/mruby-zest-build/build_config.rb zynaddsubfx-3.0.4/mruby-zest-build/build_config.rb
+--- zynaddsubfx-3.0.4.orig/mruby-zest-build/build_config.rb	2019-03-10 17:25:51.000000000 +0100
++++ zynaddsubfx-3.0.4/mruby-zest-build/build_config.rb	2019-03-11 08:46:58.000000000 +0100
 @@ -92,7 +92,6 @@
    conf.cc do |cc|
        cc.include_paths << "#{`pwd`.strip}/../deps/nanovg/src"
@@ -9,51 +9,48 @@ diff -dur zynaddsubfx-3.0.3.orig/mruby-zest-build/build_config.rb zynaddsubfx-3.
        cc.include_paths << "/usr/share/mingw-w64/include/" if windows
        cc.include_paths << "/usr/x86_64-w64-mingw32/include/" if windows
        cc.flags << "-DLDBL_EPSILON=1e-6" if windows
-@@ -110,7 +109,7 @@
-       #linker.library_paths  << "#{`pwd`.strip}/../deps/rtosc/build/"
-       linker.library_paths  << "#{`pwd`.strip}/../src/osc-bridge/"
-       linker.libraries << 'osc-bridge'
--      linker.flags_after_libraries  << "#{`pwd`.strip}/../deps/libuv.a"
-+      linker.flags_after_libraries  << "-luv"
+@@ -113,7 +112,7 @@
        linker.flags_after_libraries  << "#{`pwd`.strip}/../deps/pugl/build/libpugl-0.a"
        linker.flags_after_libraries  << "#{`pwd`.strip}/../deps/libnanovg.a"
        if(!windows)
-diff -dur zynaddsubfx-3.0.3.orig/mruby-zest-build/Makefile zynaddsubfx-3.0.3/mruby-zest-build/Makefile
---- zynaddsubfx-3.0.3.orig/mruby-zest-build/Makefile	2018-08-06 09:01:21.000000000 +0200
-+++ zynaddsubfx-3.0.3/mruby-zest-build/Makefile	2018-08-07 14:31:35.000000000 +0200
-@@ -10,12 +10,12 @@
- #	cd deps/pugl         && ./waf configure --no-cairo --static
- 	cd deps/pugl         && ./waf configure --no-cairo --static --debug
- 	cd deps/pugl         && ./waf
--	cd src/osc-bridge    && CFLAGS="-I ../../deps/libuv-v1.9.1/include " make lib
-+	cd src/osc-bridge    && make lib
- 	cd mruby             && MRUBY_CONFIG=../build_config.rb rake
+-        linker.flags_after_libraries  << "#{`pwd`.strip}/../deps/libuv.a"
++        linker.flags_after_libraries  << "-luv"
+         if(ENV['OS'] != "Mac")
+           linker.libraries << 'GL'
+           linker.libraries << 'X11'
+diff -dur -x '*~' -x '*.orig' -x '*.rej' zynaddsubfx-3.0.4.orig/mruby-zest-build/Makefile zynaddsubfx-3.0.4/mruby-zest-build/Makefile
+--- zynaddsubfx-3.0.4.orig/mruby-zest-build/Makefile	2019-03-10 17:25:51.000000000 +0100
++++ zynaddsubfx-3.0.4/mruby-zest-build/Makefile	2019-03-11 08:48:11.000000000 +0100
+@@ -15,7 +15,7 @@
  	$(CC) -shared -o libzest.so `find mruby/build/host -type f | grep -e "\.o$$" | grep -v bin` ./deps/libnanovg.a \
  		./deps/libnanovg.a \
  		src/osc-bridge/libosc-bridge.a \
--		./deps/libuv-v1.9.1/.libs/libuv.a  -lm -lX11 -lGL -lpthread
+-		./deps/$(UV_DIR)/.libs/libuv.a  -lm -lX11 -lGL -lpthread
 +		-luv -lm -lX11 -lGL -lpthread
  	$(CC) test-libversion.c deps/pugl/build/libpugl-0.a -ldl -o zest -lX11 -lGL -lpthread -I deps/pugl -std=gnu99
  
  osx:
-@@ -49,20 +49,13 @@
+@@ -30,7 +30,7 @@
+ 	$(CC) -shared -o libzest.so `find mruby/build/host -type f | grep -e "\.o$$" | grep -v bin` ./deps/libnanovg.a \
+ 		./deps/libnanovg.a \
+ 		src/osc-bridge/libosc-bridge.a \
+-		./deps/$(UV_DIR)/.libs/libuv.a  -lm -framework OpenGL -lpthread
++		-luv -lm -framework OpenGL -lpthread
+ 	$(CC) test-libversion.c deps/pugl/build/libpugl-0.a -ldl -o zest -framework OpenGL -framework AppKit -lpthread -I deps/pugl -std=gnu99
+ 
+ windows:
+@@ -43,12 +43,12 @@
+ 	$(CC) -mstackrealign -shared -o libzest.dll -static-libgcc `find mruby/build/w64 -type f | grep -e "\.o$$" | grep -v bin` \
+         ./deps/libnanovg.a \
+         src/osc-bridge/libosc-bridge.a \
+-        ./deps/libuv-win.a \
++        -luv \
+         -lm -lpthread -lws2_32 -lkernel32 -lpsapi -luserenv -liphlpapi -lglu32 -lgdi32 -lopengl32
+ 	$(CC) -mstackrealign -DWIN32 test-libversion.c deps/pugl/build/libpugl-0.a -o zest.exe -lpthread -I deps/pugl -std=c99 -lws2_32 -lkernel32 -lpsapi -luserenv -liphlpapi -lglu32 -lgdi32 -lopengl32
  
  
- builddep:
--	cd deps/$(UV_DIR)    && ./autogen.sh
--	cd deps/$(UV_DIR)    && CFLAGS=-fPIC ./configure
--	cd deps/$(UV_DIR)    && CFLAGS=-fPIC make
--	cp deps/$(UV_DIR)/.libs/libuv.a deps/
- 
- builddepwin:
- 	cd deps/$(UV_DIR)   && ./autogen.sh
- 	cd deps/$(UV_DIR)   && CFLAGS="-mstackrealign" ./configure  --host=x86_64-w64-mingw32
- 	cd deps/$(UV_DIR)   && LD=x86_64-w64-mingw32-gcc make
--	cp deps/$(UV_DIR)/.libs/libuv.a deps/
- 
- setup:
--	cd deps              && wget -4 $(UV_URL)
--	cd deps              && tar xvf $(UV_FILE)
- 
- setupwin:
- 	cd deps              && wget -4 $(UV_URL)
+-builddep: deps/libuv.a
++builddep: 
+ deps/libuv.a:
+ 	cd deps/$(UV_DIR)    && ./autogen.sh
+ 	cd deps/$(UV_DIR)    && CFLAGS=-fPIC ./configure
